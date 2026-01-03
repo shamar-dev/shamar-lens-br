@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shamar Lens BR</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="logo">
+        <span class="icon">🐺</span>
+        <h1>Shamar Lens BR</h1>
+      </div>
+      <div class="version">v0.1.0 MVP</div>
+    </header>
+
+    <!-- Status Section -->
+    <section class="status-section">
+      <div class="status-indicator">
+        <div class="status-dot active"></div>
+        <span class="status-text">Ativo e protegendo</span>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <h2>Estatísticas</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="analysis-count">0</div>
+          <div class="stat-label">Análises realizadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="flags-count">0</div>
+          <div class="stat-label">Manipulações detectadas</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="actions-section">
+      <h2>Ações Rápidas</h2>
+      <div class="actions-grid">
+        <button class="action-btn" id="analyze-current">
+          <span class="action-icon">🔍</span>
+          <span class="action-text">Analisar Página Atual</span>
+        </button>
+        <button class="action-btn" id="view-education">
+          <span class="action-icon">📚</span>
+          <span class="action-text">Material Educativo</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Settings Toggle -->
+    <section class="settings-section">
+      <h2>Configurações</h2>
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-name">Análise Automática</div>
+          <div class="setting-desc">Analisa páginas automaticamente</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="auto-analyze" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-name">Mostrar Overlay</div>
+          <div class="setting-desc">Exibe alertas quando detectar manipulação</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="show-overlay" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <div class="footer-links">
+        <a href="#" id="about-link">Sobre</a>
+        <span class="separator">•</span>
+        <a href="#" id="github-link">GitHub</a>
+        <span class="separator">•</span>
+        <a href="#" id="feedback-link">Feedback</a>
+      </div>
+      <div class="footer-copyright">
+        <small>Código aberto • Sem rastreamento</small>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
