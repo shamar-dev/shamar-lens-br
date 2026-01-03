@@ -6,7 +6,7 @@
 > *O Shamar Lens foi criado para proteger a percepção, a democracia e o discernimento do povo brasileiro.*
 
 [![Licença: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Versão](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/seu-usuario/shamar-lens-br)
+[![Versão](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/shamar-dev/shamar-lens-br)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Em%20Breve-green.svg)](#instalação)
 
 ---
@@ -103,7 +103,7 @@ Quando o score é **< 70**, uma **aura dourada** aparece ao redor da página, re
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/shamar-lens-br.git
+git clone https://github.com/shamar-dev/shamar-lens-br.git
 
 # Abra Chrome → Extensões → Modo do Desenvolvedor → Carregar sem compactação
 # Selecione a pasta shamar-lens-br/
@@ -173,7 +173,7 @@ Fact-checker • Filtro • Substituto do julgamento humano • "Verdade absolut
 
 ## 🤝 Como Contribuir
 
-1. 🐛 Reporte bugs - [Issues](https://github.com/seu-usuario/shamar-lens-br/issues)
+1. 🐛 Reporte bugs - [Issues](https://github.com/shamar-dev/shamar-lens-br/issues)
 2. 💡 Sugira melhorias
 3. 🔧 Contribua com código - Pull Requests
 4. 📢 Divulgue
