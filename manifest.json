@@ -1,18 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "Shamar Lens BR - Detector de Manipulação Política",
-  "version": "0.7.0",
-  "description": "Detector educativo de manipulação política e fake news em conteúdo brasileiro. Não bloqueia - ensina a identificar.",
+  "name": "Shamar Lens BR - Detector de Manipulação",
+  "version": "0.7.1",
+  "description": "🐺 Detector de manipulação em notícias brasileiras. Score 0-100 em tempo real.",
   
   "permissions": [
     "activeTab",
-    "storage",
-    "scripting"
+    "storage"
   ],
   
   "host_permissions": [
-    "https://*/*",
-    "http://*/*"
+    "*://*.g1.globo.com/*",
+    "*://*.uol.com.br/*",
+    "*://*.folha.uol.com.br/*",
+    "*://*.estadao.com.br/*",
+    "*://*.veja.abril.com.br/*",
+    "*://*.exame.com/*",
+    "*://*.bbc.com/portuguese/*",
+    "*://*.cnnbrasil.com.br/*",
+    "*://*.gazetadopovo.com.br/*",
+    "*://*.oglobo.globo.com/*"
   ],
   
   "background": {
@@ -29,14 +36,17 @@
         "*://*.veja.abril.com.br/*",
         "*://*.exame.com/*",
         "*://*.bbc.com/portuguese/*",
-        "*://*.cnn.com.br/*",
+        "*://*.cnnbrasil.com.br/*",
         "*://*.gazetadopovo.com.br/*",
-        "*://*.oglobo.globo.com/*",
-	"file:///*mock-noticia*"
+        "*://*.oglobo.globo.com/*"
       ],
       "js": [
         "shamar-bundle.js",
         "shamar-contextual-analyzer.js",
+        "shamar-compassionate-messages.js",
+        "shamar-modes.js",
+        "shamar-reflection.js",
+        "shamar-privacy-indicator.js",
         "shamar-aura.js",
         "shamar-badge.js",
         "shamar-legal.js",

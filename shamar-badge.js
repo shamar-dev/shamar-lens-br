@@ -165,6 +165,7 @@ const ShamarBadge = {
   
   /**
    * Determina velocidade de respiração baseada no score
+   * Pode ser chamado como método do objeto
    */
   getBreathSpeed(score) {
     if (score >= 80) return '4s';   // Verde - ZEN

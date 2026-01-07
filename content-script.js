@@ -70,6 +70,7 @@ let currentOverlay = null;
 
   /**
    * Analisa conteúdo da página
+   * INTEGRADO: Sistema compassivo + modos + reflexão
    */
   async function analyzePage() {
     if (isAnalyzing) return;
@@ -87,15 +88,80 @@ let currentOverlay = null;
     try {
       const metadata = extractMetadata();
       
-      // Chama analyzer
-      const analysis = await shamarAnalyzer.analyze(content, metadata.url);
+      // MOMENTO DE PAUSA (compassivo) - antes da análise
+      if (window.ShamarReflection) {
+        window.ShamarReflection.showPauseMoment();
+      }
+      
+      // Chama analyzer (se disponível)
+      let analysis = null;
+      if (typeof shamarAnalyzer !== 'undefined') {
+        analysis = await shamarAnalyzer.analyze(content, metadata.url);
+      }
       
       // ANÁLISE CONTEXTUAL SEMPRE (confiável ou não)
       const contextualAnalysis = ShamarContextualAnalyzer.analyze(content, metadata);
       console.log('🐺 Análise contextual:', contextualAnalysis);
       
-      // SEMPRE mostra badge (feedback visual constante)
-      ShamarBadge.show(contextualAnalysis, metadata);
+      // Verifica modo atual e se deve mostrar badge
+      // Se ShamarModes não estiver disponível ou não inicializado, sempre mostra (fallback)
+      let shouldShow = true;
+      
+      if (window.ShamarModes) {
+        // Verifica se modo está inicializado
+        if (window.ShamarModes.currentMode) {
+          shouldShow = window.ShamarModes.shouldShowBadge(contextualAnalysis.score);
+          console.log('🐺 Modo verificado:', window.ShamarModes.currentMode, 'shouldShow:', shouldShow);
+        } else {
+          console.log('🐺 Modo não inicializado ainda, mostrando badge por padrão');
+          shouldShow = true; // Padrão: sempre mostra se modo não inicializado
+        }
+      } else {
+        console.log('🐺 ShamarModes não disponível, mostrando badge por padrão');
+      }
+      
+      if (shouldShow) {
+        // Usa mensagens compassivas se disponível
+        let message = null;
+        if (window.ShamarCompassionateMessages) {
+          message = window.ShamarCompassionateMessages.getMessage(
+            contextualAnalysis.score,
+            contextualAnalysis.level,
+            contextualAnalysis.details
+          );
+        }
+        
+        // Mostra badge com análise contextual (e mensagem compassiva se disponível)
+        if (window.ShamarBadge) {
+          console.log('🐺 Mostrando badge - Score:', contextualAnalysis.score);
+          ShamarBadge.show(contextualAnalysis, metadata);
+        } else {
+          console.warn('🐺 ShamarBadge não disponível');
+        }
+      } else {
+        console.log('🐺 Badge não mostrado devido ao modo atual:', window.ShamarModes?.currentMode, 'Score:', contextualAnalysis.score);
+      }
+      
+      // Ativa aura se necessário (respeitando modo)
+      if (window.ShamarModes?.shouldActivateAura(contextualAnalysis.score)) {
+        if (window.ShamarBadge && window.ShamarAura) {
+          const breathSpeed = window.ShamarBadge.getBreathSpeed(contextualAnalysis.score);
+          window.ShamarAura.activate(breathSpeed);
+        }
+      } else {
+        // Desativa aura se score melhorou
+        if (window.ShamarAura) {
+          window.ShamarAura.deactivate();
+        }
+      }
+      
+      // Mostra diálogo de reflexão (se modo educativo)
+      if (window.ShamarReflection) {
+        const currentMode = window.ShamarModes?.getCurrentMode();
+        if (currentMode?.id === 'educational') {
+          window.ShamarReflection.showReflectionDialog(contextualAnalysis, metadata);
+        }
+      }
       
     } catch (error) {
       console.error('🐺 Shamar: Erro na análise', error);
@@ -405,14 +471,48 @@ let currentOverlay = null;
   }  
   /**
    * Mostra tooltip educativo quando clica em item
+   * INTEGRADO: Usa sistema de mensagens compassivas
    */
   function showEducationalTooltip(type, value) {
     // Remove tooltip existente
     const existingTooltip = document.getElementById('shamar-educational-tooltip');
     if (existingTooltip) existingTooltip.remove();
     
-    // Conteúdo educativo por tipo
-    const content = getEducationalContent(type, value);
+    // Tenta usar sistema de mensagens compassivas primeiro
+    let educational = null;
+    let content = '';
+    
+    if (window.ShamarCompassionateMessages) {
+      educational = window.ShamarCompassionateMessages.getEducationalMessage(type, value);
+    }
+    
+    // Se não tiver sistema compassivo, usa conteúdo antigo
+    if (!educational) {
+      content = getEducationalContent(type, value);
+    } else {
+      // Monta conteúdo usando mensagem compassiva
+      content = `
+        <h3 style="color: rgba(202, 138, 4, 1); margin: 0 0 16px 0; font-size: 18px;">
+          ${educational.icon || '💡'} ${educational.title}
+        </h3>
+        
+        <p style="margin-bottom: 16px; font-size: 14px; line-height: 1.6; color: #374151;">
+          ${educational.intro}
+        </p>
+        
+        <div style="background: #f9fafb; padding: 16px; border-radius: 12px; margin-bottom: 16px; border-left: 4px solid rgba(255, 223, 128, 0.6);">
+          <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #374151;">
+            ${educational.explanation}
+          </p>
+        </div>
+        
+        <div style="background: rgba(255, 223, 128, 0.1); padding: 12px; border-radius: 8px; margin-top: 16px;">
+          <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #6b7280; font-style: italic;">
+            💡 <strong>Dica:</strong> ${educational.guidance}
+          </p>
+        </div>
+      `;
+    }
     
     // Cria tooltip
     const tooltip = document.createElement('div');
@@ -910,8 +1010,29 @@ let currentOverlay = null;
 
   /**
    * Inicialização
+   * INTEGRADO: Modos, privacidade, mensagens compassivas
    */
   function init() {
+    // Inicializa sistema de modos (se disponível)
+    if (window.ShamarModes) {
+      window.ShamarModes.init();
+      
+      // Escuta mudanças de modo
+      window.addEventListener('shamar:mode-changed', (event) => {
+        console.log('🐺 Modo alterado:', event.detail.mode.name);
+        // Reanalisa página com novo modo
+        setTimeout(() => analyzePage(), 500);
+      });
+    }
+    
+    // Mostra indicador de privacidade (se disponível)
+    if (window.ShamarPrivacyIndicator) {
+      // Delay para garantir que outros módulos carregaram
+      setTimeout(() => {
+        window.ShamarPrivacyIndicator.show();
+      }, 1500);
+    }
+    
     // Analisa página inicial
     setTimeout(() => {
       analyzePage();
@@ -920,12 +1041,22 @@ let currentOverlay = null;
     // Observa mudanças (para SPAs)
     setupObserver();
     
-    // Escuta mensagens do background script
+    // Escuta mensagens do background script e popup
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'ANALYZE_NOW') {
         analyzePage();
         sendResponse({ status: 'analyzing' });
+        return true;
       }
+      
+      // Listener para mudança de modo (do popup)
+      if (message.type === 'CHANGE_MODE' && window.ShamarModes) {
+        window.ShamarModes.setMode(message.mode);
+        sendResponse({ status: 'mode-changed', mode: message.mode });
+        return true;
+      }
+      
+      return true; // Mantém canal aberto para resposta assíncrona
     });
   }
 
